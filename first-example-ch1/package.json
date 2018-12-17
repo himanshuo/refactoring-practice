@@ -1,0 +1,18 @@
+{
+  "name": "first-example-ch1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "print_bill.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "nodemon": "^1.18.9"
+  }
+}
