@@ -1,9 +1,10 @@
-import {statement} from './print_bill';
+import {Bill} from './bill';
 
 const fs = require('fs');
 const invoices = JSON.parse(fs.readFileSync('./src/invoices.json'));
 const plays = JSON.parse(fs.readFileSync('./src/plays.json'));
+const bill = new Bill(plays);
 
 for (const invoice of invoices) {
-  console.log(statement(invoice, plays));
+  console.log(bill.statement(invoice));
 }
