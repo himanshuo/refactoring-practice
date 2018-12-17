@@ -4,7 +4,12 @@
   "description": "",
   "main": "print_bill.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js"
+    "lint": "eslint ./src --fix",
+    "start": "nodemon --exec babel-node src/index.js",
+    "test": "jest",
+    "coverage": "jest --coverage",
+    "lintTest": "npm run lint && npm run test",
+    "ctc": "nodemon --exec npm run lintTest"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +18,9 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
+    "eslint": "^5.10.0",
+    "eslint-config-google": "^0.11.0",
+    "jest": "^23.6.0",
     "nodemon": "^1.18.9"
   }
 }
