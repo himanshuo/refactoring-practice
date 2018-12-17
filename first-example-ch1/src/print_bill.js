@@ -1,3 +1,16 @@
+
+/**
+ * Alias for Intl.NumberFormat's format function with usd defaults
+ * @param {Number} value dollar value
+ * @return {String} USD formatted number
+ */
+function usd(value) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2}).format(value);
+}
+
 /**
  * Provides properly-formatted bill provided an invoice and list of plays.
  * @param {Invoice} invoice invoice for a customer.
@@ -8,9 +21,6 @@ export function statement(invoice, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
-  const format = new Intl.NumberFormat('en-US',
-      {style: 'currency', currency: 'USD',
-        minimumFractionDigits: 2}).format;
   for (const perf of invoice.performances) {
     const play = plays[perf.playID];
     let thisAmount = 0;
@@ -39,11 +49,11 @@ export function statement(invoice, plays) {
     if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
 
     // print line for this order
-    const amount =format(thisAmount/100);
+    const amount = usd(thisAmount/100);
     result += `  ${play.name}: ${amount} (${perf.audience} seats)\n`;
     totalAmount += thisAmount;
   }
-  result += `Amount owed is ${format(totalAmount/100)}\n`;
+  result += `Amount owed is ${usd(totalAmount/100)}\n`;
   result += `You earned ${volumeCredits} credits\n`;
   return result;
 }
