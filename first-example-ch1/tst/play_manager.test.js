@@ -10,7 +10,6 @@ test('creates Comedy Play if type = comedy', () => {
             "type": "comedy"
     };
     const sut = new PlayManager(playJson);
-    console.log(sut);
     expect(sut.getPlay(playId) instanceof Comedy).toBeTruthy();
 });
 

@@ -16,65 +16,27 @@ export class Bill {
    * @return {String} properly-formatted bill.
    */
   statement(invoice) {
-    return this.applyStatementFormat(this.getStatementData(invoice));
+    return this.applyStatementFormat(invoice);
   }
 
   /**
    *
-   * @param {StatementData} statementData
+   * @param {Invoice} invoice
    * @return {String} statement format
    */
-  applyStatementFormat(statementData) {
-    let result = `Statement for ${statementData.customer}\n`;
-    for (const play of statementData.plays) {
-      result += `  ${play.name}: ${play.amount} (${play.audience} seats)\n`;
+  applyStatementFormat(invoice) {
+    let result = `Statement for ${invoice.getCustomer()}\n`;
+    for (const performance of invoice.getPerformances()) {
+      const play = performance.getPlay();
+      const name = play.getName();
+      const cost = performance.costCents();
+      const audience = performance.getAudience();
+      result += `  ${name}: ${this.usd(cost)} (${audience} seats)\n`;
     }
-    result += `Amount owed is ${statementData.amountOwed}\n`;
-    result += `You earned ${statementData.volumeCredits} credits\n`;
+    result += `Amount owed is ${this.usd(invoice.getCostCents())}\n`;
+    result += `You earned ${invoice.getVolumeCredits()} credits\n`;
     return result;
   }
-
-  /**
-   * get data required to create a statement for a given invoice
-   * @param {Invoice} invoice
-   * @return {StatementData} data required to create a statement
-   */
-  getStatementData(invoice) {
-    return {
-      customer: invoice.customer,
-      amountOwed: this.usd(invoice.getCostCents()),
-      volumeCredits: invoice.getVolumeCredits(),
-      plays: this.getInfoForPlays(invoice.getPerformances()),
-    };
-  }
-
-  /**
-   * get data for a list of performances
-   * @param {[Performance]} performances
-   * @return {[PerformanceData]} PerformanceData for each performance
-   */
-  getInfoForPlays(performances) {
-    const plays = []; // (name, amount, audience)
-    for (const perf of performances) {
-      plays.push(this._getInfoForPlay(perf));
-    }
-    return plays;
-  }
-
-  /**
-   * get data for a specific performance
-   * @param {Performance} performance
-   * @return {PerformanceData} (name, amount, audience) for the performance
-   */
-  _getInfoForPlay(performance) {
-    const play = performance.getPlay();
-    return {
-      name: play.name,
-      amount: this.usd(performance.costCents()),
-      audience: performance.getAudience(),
-    };
-  }
-
 
   /**
    * Alias for Intl.NumberFormat's format function with usd defaults
