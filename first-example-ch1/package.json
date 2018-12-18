@@ -8,8 +8,7 @@
     "start": "nodemon --exec babel-node src/index.js",
     "test": "jest",
     "coverage": "jest --coverage",
-    "lintTest": "npm run lint && npm run test",
-    "ctc": "nodemon --exec npm run lintTest"
+    "ctc": "npm run lint && npm run test"
   },
   "keywords": [],
   "author": "",
