@@ -7,8 +7,7 @@ Reads invoices.json and plays.json in order to print out a formatted bill.
 > npm start
 
 # Compile-Test-Commit cycle
-1. > npm run ctc
-2. Figure out what changes to make
-3. Make changes
-4. Verify that linting/tests pass
-5. > git commit -m "CHANGE"
+1. Figure out what changes to make
+2. Make changes
+3. > npm run ctc
+4. > git commit -m "CHANGE"
