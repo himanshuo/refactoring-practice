@@ -18,7 +18,15 @@ export class Bill {
    * @return {String} properly-formatted bill.
    */
   statement(invoice) {
-    const statementData = this.getStatementData(invoice);
+    return this.applyStatementFormat(this.getStatementData(invoice));
+  }
+
+  /**
+   *
+   * @param {StatementData} statementData
+   * @return {String} statement format
+   */
+  applyStatementFormat(statementData) {
     let result = `Statement for ${statementData.customer}\n`;
     for (const play of statementData.plays) {
       result += `  ${play.name}: ${play.amount} (${play.audience} seats)\n`;
