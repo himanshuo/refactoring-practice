@@ -1,4 +1,4 @@
-import {Comedy} from './comedy';
+import {Comedy} from './play/comedy';
 
 /**
  * Customer Invoice

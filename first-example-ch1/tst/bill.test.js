@@ -1,5 +1,5 @@
 const { Bill } = require('../src/bill');
-const {PlayManager} = require('../src/play_manager');
+const {PlayManager} = require('../src/play/play_manager');
 const { Invoice } = require('../src/invoice');
 const { Performance } = require('../src/performance');
 
