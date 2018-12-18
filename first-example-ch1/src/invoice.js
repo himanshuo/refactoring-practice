@@ -1,5 +1,3 @@
-import {Comedy} from './play/comedy';
-
 /**
  * Customer Invoice
  */
@@ -41,11 +39,7 @@ export class Invoice {
   getVolumeCredits() {
     let volumeCredits = 0;
     for (const performance of this.performances) {
-      const play = performance.getPlay();
-      volumeCredits += Math.max(performance.getAudience() - 30, 0);
-      if (play instanceof Comedy) {
-        volumeCredits += Math.floor(performance.getAudience() / 5);
-      }
+      volumeCredits += performance.volumeCredits();
     }
     return volumeCredits;
   }
