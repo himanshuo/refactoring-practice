@@ -19,4 +19,18 @@ export class Performance {
   costCents() {
     return this.play.costCents(this.audience);
   }
+
+  /**
+   * @return {Number}
+   */
+  getAudience() {
+    return this.audience;
+  }
+
+  /**
+   * @return {Play}
+   */
+  getPlay() {
+    return this.play;
+  }
 }

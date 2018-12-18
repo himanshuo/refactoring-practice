@@ -1,6 +1,3 @@
-import {Comedy} from './comedy';
-import {Performance} from './performance';
-
 /**
  * Bill
  */
@@ -45,9 +42,9 @@ export class Bill {
   getStatementData(invoice) {
     return {
       customer: invoice.customer,
-      amountOwed: this.usd(this.calculateTotalAmount(invoice)),
-      volumeCredits: this.calculateVolumeCredits(invoice),
-      plays: this.getInfoForPlays(invoice.performances),
+      amountOwed: this.usd(invoice.getCostCents()),
+      volumeCredits: invoice.getVolumeCredits(),
+      plays: this.getInfoForPlays(invoice.getPerformances()),
     };
   }
 
@@ -70,11 +67,11 @@ export class Bill {
    * @return {PerformanceData} (name, amount, audience) for the performance
    */
   _getInfoForPlay(performance) {
-    const play = this.playManager.getPlay(performance.playID);
+    const play = performance.getPlay();
     return {
       name: play.name,
-      amount: this.usd(new Performance(play, performance.audience).costCents()),
-      audience: performance.audience,
+      amount: this.usd(performance.costCents()),
+      audience: performance.getAudience(),
     };
   }
 
@@ -89,34 +86,5 @@ export class Bill {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 2}).format(value/100);
-  }
-
-  /**
-   * @param {Invoice} invoice
-   * @return {Number} total amount to charge for the provided invoice
-   */
-  calculateTotalAmount(invoice) {
-    let totalAmount = 0;
-    for (const perf of invoice.performances) {
-      const play = this.playManager.getPlay(perf.playID);
-      totalAmount += new Performance(play, perf.audience).costCents();
-    }
-    return totalAmount;
-  }
-
-  /**
-   * @param {Invoice} invoice
-   * @return {Number} number of credits given based on the audience sizes
-   */
-  calculateVolumeCredits(invoice) {
-    let volumeCredits = 0;
-    for (const perf of invoice.performances) {
-      const play = this.playManager.getPlay(perf.playID);
-      volumeCredits += Math.max(perf.audience - 30, 0);
-      if (play instanceof Comedy) {
-        volumeCredits += Math.floor(perf.audience / 5);
-      }
-    }
-    return volumeCredits;
   }
 }
