@@ -11,12 +11,23 @@ export class Bill {
   }
 
   /**
-   * Provides properly-formatted bill provided an invoice and list of plays.
+   * Provides properly text-formatted bill provided
+   * an invoice and list of plays.
    * @param {Invoice} invoice invoice for a customer.
    * @return {String} properly-formatted bill.
    */
-  statement(invoice) {
-    return this.applyStatementFormat(invoice);
+  textStatement(invoice) {
+    return this.applyTextStatementFormat(invoice);
+  }
+
+  /**
+   * Provides properly html-formatted bill provided
+   * an invoice and list of plays.
+   * @param {Invoice} invoice invoice for a customer.
+   * @return {String} properly-formatted bill.
+   */
+  htmlStatement(invoice) {
+    return this.applyHtmlStatementFormat(invoice);
   }
 
   /**
@@ -24,7 +35,7 @@ export class Bill {
    * @param {Invoice} invoice
    * @return {String} statement format
    */
-  applyStatementFormat(invoice) {
+  applyTextStatementFormat(invoice) {
     let result = `Statement for ${invoice.getCustomer()}\n`;
     for (const performance of invoice.getPerformances()) {
       const play = performance.getPlay();
@@ -35,6 +46,27 @@ export class Bill {
     }
     result += `Amount owed is ${this.usd(invoice.getCostCents())}\n`;
     result += `You earned ${invoice.getVolumeCredits()} credits\n`;
+    return result;
+  }
+
+  /**
+   *
+   * @param {Invoice} invoice
+   * @return {String} statement format
+   */
+  applyHtmlStatementFormat(invoice) {
+    let result = `<h1>Statement for ${invoice.getCustomer()}</h1>`;
+    for (const performance of invoice.getPerformances()) {
+      result += '<div>';
+      const play = performance.getPlay();
+      const name = play.getName();
+      const cost = performance.costCents();
+      const audience = performance.getAudience();
+      result += `${name}: ${this.usd(cost)} (${audience} seats)\n`;
+      result += '</div>';
+    }
+    result += `<br/>Amount owed is ${this.usd(invoice.getCostCents())}\n`;
+    result += `<br/>You earned ${invoice.getVolumeCredits()} credits\n`;
     return result;
   }
 

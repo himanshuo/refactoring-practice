@@ -20,5 +20,6 @@ const invoices = invoicesJson.map((invoiceJson) => {
 });
 
 for (const invoice of invoices) {
-  console.log(bill.statement(invoice));
+  console.log(bill.textStatement(invoice));
+  console.log(bill.htmlStatement(invoice));
 }
