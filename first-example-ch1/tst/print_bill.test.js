@@ -1,4 +1,5 @@
 const { Bill } = require('../src/bill');
+const {PlayManager} = require('../src/play_manager');
 
 test('prints properly-formatted bill', () => {
     const invoice = {
@@ -32,7 +33,7 @@ test('prints properly-formatted bill', () => {
           "type": "tragedy"
         }
     };
-  expect(new Bill(plays).statement(invoice)).toEqual(`Statement for BigCo
+  expect(new Bill(new PlayManager(plays)).statement(invoice)).toEqual(`Statement for BigCo
   Hamlet: $650.00 (55 seats)
   As You Like It: $580.00 (35 seats)
   Othello: $500.00 (40 seats)

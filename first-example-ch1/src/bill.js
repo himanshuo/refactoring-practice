@@ -1,13 +1,15 @@
+import {Comedy} from './comedy';
+
 /**
  * Bill
  */
 export class Bill {
   /**
    * Create a Bill
-   * @param {[Play]} plays
+   * @param {[PlayManager]} playManager
    */
-  constructor(plays) {
-    this.plays = plays;
+  constructor(playManager) {
+    this.playManager = playManager;
   }
 
   /**
@@ -59,28 +61,10 @@ export class Bill {
    * @return {PerformanceData} (name, amount, audience) for the performance
    */
   _getInfoForPlay(performance) {
-    const play = this.plays[performance.playID];
-    let thisAmount = 0;
-    switch (play.type) {
-      case 'tragedy':
-        thisAmount = 40000;
-        if (performance.audience > 30) {
-          thisAmount += 1000 * (performance.audience - 30);
-        }
-        break;
-      case 'comedy':
-        thisAmount = 30000;
-        if (performance.audience > 20) {
-          thisAmount += 10000 + 500 * (performance.audience - 20);
-        }
-        thisAmount += 300 * performance.audience;
-        break;
-      default:
-        throw new Error(`unknown type: ${play.type}`);
-    }
+    const play = this.playManager.getPlay(performance.playID);
     return {
       name: play.name,
-      amount: this.usd(thisAmount/100),
+      amount: this.usd(play.cost(performance)/100),
       audience: performance.audience,
     };
   }
@@ -105,26 +89,8 @@ export class Bill {
   calculateTotalAmount(invoice) {
     let totalAmount = 0;
     for (const perf of invoice.performances) {
-      const play = this.plays[perf.playID];
-      let thisAmount = 0;
-      switch (play.type) {
-        case 'tragedy':
-          thisAmount = 40000;
-          if (perf.audience > 30) {
-            thisAmount += 1000 * (perf.audience - 30);
-          }
-          break;
-        case 'comedy':
-          thisAmount = 30000;
-          if (perf.audience > 20) {
-            thisAmount += 10000 + 500 * (perf.audience - 20);
-          }
-          thisAmount += 300 * perf.audience;
-          break;
-        default:
-          throw new Error(`unknown type: ${play.type}`);
-      }
-      totalAmount += thisAmount;
+      const play = this.playManager.getPlay(perf.playID);
+      totalAmount += play.cost(perf);
     }
     return totalAmount;
   }
@@ -136,9 +102,9 @@ export class Bill {
   calculateVolumeCredits(invoice) {
     let volumeCredits = 0;
     for (const perf of invoice.performances) {
-      const play = this.plays[perf.playID];
+      const play = this.playManager.getPlay(perf.playID);
       volumeCredits += Math.max(perf.audience - 30, 0);
-      if ('comedy' === play.type) {
+      if (play instanceof Comedy) {
         volumeCredits += Math.floor(perf.audience / 5);
       }
     }
