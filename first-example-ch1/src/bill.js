@@ -17,7 +17,6 @@ export class Bill {
    * @return {String} properly-formatted bill.
    */
   statement(invoice) {
-    let volumeCredits = 0;
     let result = `Statement for ${invoice.customer}\n`;
     for (const perf of invoice.performances) {
       const play = this.plays[perf.playID];
@@ -40,20 +39,13 @@ export class Bill {
         default:
           throw new Error(`unknown type: ${play.type}`);
       }
-
-      // add volume credits
-      volumeCredits += Math.max(perf.audience - 30, 0);
-      // add extra credit for every ten comedy attendees
-      if ('comedy' === play.type) {
-        volumeCredits += Math.floor(perf.audience / 5);
-      }
       // print line for this order
       const amount = this.usd(thisAmount/100);
       result += `  ${play.name}: ${amount} (${perf.audience} seats)\n`;
     }
     const amountOwed = this.usd(this.calculateTotalAmount(invoice)/100);
     result += `Amount owed is ${amountOwed}\n`;
-    result += `You earned ${volumeCredits} credits\n`;
+    result += `You earned ${this.calculateVolumeCredits(invoice)} credits\n`;
     return result;
   }
 
@@ -98,5 +90,21 @@ export class Bill {
       totalAmount += thisAmount;
     }
     return totalAmount;
+  }
+
+  /**
+   * @param {Invoice} invoice
+   * @return {Number} number of credits given based on the audience sizes
+   */
+  calculateVolumeCredits(invoice) {
+    let volumeCredits = 0;
+    for (const perf of invoice.performances) {
+      const play = this.plays[perf.playID];
+      volumeCredits += Math.max(perf.audience - 30, 0);
+      if ('comedy' === play.type) {
+        volumeCredits += Math.floor(perf.audience / 5);
+      }
+    }
+    return volumeCredits;
   }
 }
