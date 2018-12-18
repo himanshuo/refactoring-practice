@@ -6,9 +6,9 @@ import {Play} from './play';
 export class Tragedy extends Play {
   /**
   * @param {Performance} performance
-  * @return {Number} cost of Comedy Play
+  * @return {Number} cost of Tragedy Play in cents
   */
-  cost(performance) {
+  costCents(performance) {
     let amount = 40000;
     if (performance.audience > 30) {
       amount += 1000 * (performance.audience - 30);

@@ -21,7 +21,7 @@ export class Play {
    *
    * @param {Performance} performance
    */
-  cost(performance) {
-    throw new Error('cost not implemented');
+  costCents(performance) {
+    throw new Error('costCents not implemented');
   }
 }

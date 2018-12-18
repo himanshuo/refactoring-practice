@@ -44,7 +44,7 @@ export class Bill {
   getStatementData(invoice) {
     return {
       customer: invoice.customer,
-      amountOwed: this.usd(this.calculateTotalAmount(invoice)/100),
+      amountOwed: this.usd(this.calculateTotalAmount(invoice)),
       volumeCredits: this.calculateVolumeCredits(invoice),
       plays: this.getInfoForPlays(invoice.performances),
     };
@@ -72,7 +72,7 @@ export class Bill {
     const play = this.playManager.getPlay(performance.playID);
     return {
       name: play.name,
-      amount: this.usd(play.cost(performance)/100),
+      amount: this.usd(play.costCents(performance)),
       audience: performance.audience,
     };
   }
@@ -87,7 +87,7 @@ export class Bill {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-      minimumFractionDigits: 2}).format(value);
+      minimumFractionDigits: 2}).format(value/100);
   }
 
   /**
@@ -98,7 +98,7 @@ export class Bill {
     let totalAmount = 0;
     for (const perf of invoice.performances) {
       const play = this.playManager.getPlay(perf.playID);
-      totalAmount += play.cost(perf);
+      totalAmount += play.costCents(perf);
     }
     return totalAmount;
   }
