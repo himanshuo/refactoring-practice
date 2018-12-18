@@ -17,7 +17,14 @@ export class Performance {
    * @return {Number} cost of this performance (in cents)
    */
   costCents() {
-    return this.play.costCents(this.audience);
+    return this.getPlay().costCents(this.getAudience());
+  }
+
+  /**
+   * @return {Number} volume credits recieved due to size of audience
+   */
+  volumeCredits() {
+    return this.getPlay().volumeCredits(this.getAudience());
   }
 
   /**

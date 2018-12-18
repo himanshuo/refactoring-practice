@@ -15,4 +15,12 @@ export class Tragedy extends Play {
     }
     return amount;
   }
+
+  /**
+   * @param {Number} audience
+   * @return {Number} volume credits recieved due to size of audience
+   */
+  volumeCredits(audience) {
+    return Math.max(audience - 30, 0);
+  }
 }

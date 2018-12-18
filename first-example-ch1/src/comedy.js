@@ -16,4 +16,12 @@ export class Comedy extends Play {
     amount += 300 * audience;
     return amount;
   }
+
+  /**
+   * @param {Number} audience
+   * @return {Number} volume credits recieved due to size of audience
+   */
+  volumeCredits(audience) {
+    return Math.max(audience - 30, 0) + Math.floor(audience / 5);
+  }
 }

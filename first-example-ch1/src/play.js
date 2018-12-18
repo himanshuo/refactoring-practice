@@ -19,9 +19,17 @@ export class Play {
 
   /**
    *
-   * @param {Performance} performance
+   * @param {Number} audience
    */
-  costCents(performance) {
+  costCents(audience) {
     throw new Error('costCents not implemented');
+  }
+
+  /**
+   *
+   * @param {Number} audience
+   */
+  volumeCredits(audience) {
+    throw new Error('volumeCredits not implemented');
   }
 }
