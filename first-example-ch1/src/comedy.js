@@ -5,15 +5,15 @@ import {Play} from './play';
  */
 export class Comedy extends Play {
   /**
-  * @param {Performance} performance
+  * @param {Number} audience
   * @return {Number} cost of Comedy Play in cents
   */
-  costCents(performance) {
+  costCents(audience) {
     let amount = 30000;
-    if (performance.audience > 20) {
-      amount += 10000 + 500 * (performance.audience - 20);
+    if (audience > 20) {
+      amount += 10000 + 500 * (audience - 20);
     }
-    amount += 300 * performance.audience;
+    amount += 300 * audience;
     return amount;
   }
 }

@@ -1,4 +1,5 @@
 import {Comedy} from './comedy';
+import {Performance} from './performance';
 
 /**
  * Bill
@@ -72,7 +73,7 @@ export class Bill {
     const play = this.playManager.getPlay(performance.playID);
     return {
       name: play.name,
-      amount: this.usd(play.costCents(performance)),
+      amount: this.usd(new Performance(play, performance.audience).costCents()),
       audience: performance.audience,
     };
   }
@@ -98,7 +99,7 @@ export class Bill {
     let totalAmount = 0;
     for (const perf of invoice.performances) {
       const play = this.playManager.getPlay(perf.playID);
-      totalAmount += play.costCents(perf);
+      totalAmount += new Performance(play, perf.audience).costCents();
     }
     return totalAmount;
   }
