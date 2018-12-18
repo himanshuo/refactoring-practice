@@ -13,41 +13,78 @@ export class Bill {
   /**
    * Provides properly-formatted bill provided an invoice and list of plays.
    * @param {Invoice} invoice invoice for a customer.
-   * @param {[Play]} plays list of plays.
    * @return {String} properly-formatted bill.
    */
   statement(invoice) {
-    let result = `Statement for ${invoice.customer}\n`;
-    for (const perf of invoice.performances) {
-      const play = this.plays[perf.playID];
-      let thisAmount = 0;
-
-      switch (play.type) {
-        case 'tragedy':
-          thisAmount = 40000;
-          if (perf.audience > 30) {
-            thisAmount += 1000 * (perf.audience - 30);
-          }
-          break;
-        case 'comedy':
-          thisAmount = 30000;
-          if (perf.audience > 20) {
-            thisAmount += 10000 + 500 * (perf.audience - 20);
-          }
-          thisAmount += 300 * perf.audience;
-          break;
-        default:
-          throw new Error(`unknown type: ${play.type}`);
-      }
-      // print line for this order
-      const amount = this.usd(thisAmount/100);
-      result += `  ${play.name}: ${amount} (${perf.audience} seats)\n`;
+    const statementData = this.getStatementData(invoice);
+    let result = `Statement for ${statementData.customer}\n`;
+    for (const play of statementData.plays) {
+      result += `  ${play.name}: ${play.amount} (${play.audience} seats)\n`;
     }
-    const amountOwed = this.usd(this.calculateTotalAmount(invoice)/100);
-    result += `Amount owed is ${amountOwed}\n`;
-    result += `You earned ${this.calculateVolumeCredits(invoice)} credits\n`;
+    result += `Amount owed is ${statementData.amountOwed}\n`;
+    result += `You earned ${statementData.volumeCredits} credits\n`;
     return result;
   }
+
+  /**
+   * get data required to create a statement for a given invoice
+   * @param {Invoice} invoice
+   * @return {StatementData} data required to create a statement
+   */
+  getStatementData(invoice) {
+    return {
+      customer: invoice.customer,
+      amountOwed: this.usd(this.calculateTotalAmount(invoice)/100),
+      volumeCredits: this.calculateVolumeCredits(invoice),
+      plays: this.getInfoForPlays(invoice.performances),
+    };
+  }
+
+  /**
+   * get data for a list of performances
+   * @param {[Performance]} performances
+   * @return {[PerformanceData]} PerformanceData for each performance
+   */
+  getInfoForPlays(performances) {
+    const plays = []; // (name, amount, audience)
+    for (const perf of performances) {
+      plays.push(this._getInfoForPlay(perf));
+    }
+    return plays;
+  }
+
+  /**
+   * get data for a specific performance
+   * @param {Performance} performance
+   * @return {PerformanceData} (name, amount, audience) for the performance
+   */
+  _getInfoForPlay(performance) {
+    const play = this.plays[performance.playID];
+    let thisAmount = 0;
+    switch (play.type) {
+      case 'tragedy':
+        thisAmount = 40000;
+        if (performance.audience > 30) {
+          thisAmount += 1000 * (performance.audience - 30);
+        }
+        break;
+      case 'comedy':
+        thisAmount = 30000;
+        if (performance.audience > 20) {
+          thisAmount += 10000 + 500 * (performance.audience - 20);
+        }
+        thisAmount += 300 * performance.audience;
+        break;
+      default:
+        throw new Error(`unknown type: ${play.type}`);
+    }
+    return {
+      name: play.name,
+      amount: this.usd(thisAmount/100),
+      audience: performance.audience,
+    };
+  }
+
 
   /**
    * Alias for Intl.NumberFormat's format function with usd defaults
