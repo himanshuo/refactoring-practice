@@ -13,7 +13,7 @@ export class Play {
    * Get the name of the play
    * @return {String} name of the play
    */
-  name() {
+  getName() {
     return this.name;
   }
 
